@@ -93,7 +93,7 @@ def main():
             odds = None
         else:
             with open('/content/output.txt', 'a') as file:
-                tem = f"------------------{args.odds} odds data------------------
+                tem = f"------------------{args.odds} odds data------------------"
                 file.write('/n' + tem)
                 for g in odds.keys():
                     home_team, away_team = g.split(":")
