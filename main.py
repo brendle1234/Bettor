@@ -96,7 +96,7 @@ def main():
                 file.write(f"\n------------------{args.odds} odds data------------------")
                 for g in odds.keys():
                     home_team, away_team = g.split(":")
-                    file.write(f"\n{away_team} ({odds[g][away_team]['money_line_odds']}) @ {home_team} ({odds[g][home_team]['money_line_odds']})\n")
+                    file.write(f"\n{away_team} ({odds[g][away_team]['money_line_odds']}) @ {home_team} ({odds[g][home_team]['money_line_odds']})")
     else:
         data = get_todays_games_json(todays_games_url)
         games = create_todays_games(data)
@@ -105,22 +105,18 @@ def main():
     data, todays_games_uo, frame_ml, home_team_odds, away_team_odds = createTodaysGames(games, df, odds)
     with open('/content/output.txt', 'a') as file:
         if args.nn:
-            file.write("------------Neural Network Model Predictions-----------")
+            file.write("\n------------Neural Network Model Predictions-----------")
             data = tf.keras.utils.normalize(data, axis=1)
             NN_Runner.nn_runner(data, todays_games_uo, frame_ml, games, home_team_odds, away_team_odds, args.kc)
-            file.write("-------------------------------------------------------")
         if args.xgb:
-            file.write("---------------XGBoost Model Predictions---------------")
+            file.write("\n---------------XGBoost Model Predictions---------------")
             XGBoost_Runner.xgb_runner(data, todays_games_uo, frame_ml, games, home_team_odds, away_team_odds, args.kc)
-            file.write("-------------------------------------------------------")
         if args.A:
-            file.write("---------------XGBoost Model Predictions---------------")
+            file.write("\n---------------XGBoost Model Predictions---------------")
             XGBoost_Runner.xgb_runner(data, todays_games_uo, frame_ml, games, home_team_odds, away_team_odds, args.kc)
-            file.write("-------------------------------------------------------")
             data = tf.keras.utils.normalize(data, axis=1)
-            file.write("------------Neural Network Model Predictions-----------")
+            file.write("\n------------Neural Network Model Predictions-----------")
             NN_Runner.nn_runner(data, todays_games_uo, frame_ml, games, home_team_odds, away_team_odds, args.kc)
-            file.write("-------------------------------------------------------")
 
 
 if __name__ == "__main__":
