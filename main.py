@@ -105,7 +105,7 @@ def main():
     data, todays_games_uo, frame_ml, home_team_odds, away_team_odds = createTodaysGames(games, df, odds)
     with open('/content/output.txt', 'a') as file:
         if args.nn:
-            file.write("\n------------Neural Network Model Predictions-----------")
+            #file.write("\n------------Neural Network Model Predictions-----------")
             data = tf.keras.utils.normalize(data, axis=1)
             NN_Runner.nn_runner(data, todays_games_uo, frame_ml, games, home_team_odds, away_team_odds, args.kc)
         if args.xgb:
