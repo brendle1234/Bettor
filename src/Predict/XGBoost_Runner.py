@@ -1,16 +1,9 @@
 import copy
-
 import numpy as np
-import pandas as pd
 import xgboost as xgb
-from colorama import Fore, Style, init, deinit
 from src.Utils import Expected_Value
 from src.Utils import Kelly_Criterion as kc
 
-
-# from src.Utils.Dictionaries import team_index_current
-# from src.Utils.tools import get_json_data, to_data_frame, get_todays_games_json, create_todays_games
-init()
 xgb_ml = xgb.Booster()
 xgb_ml.load_model('Models/XGBoost_Models/XGBoost_68.6%_ML-2.json')
 xgb_uo = xgb.Booster()
@@ -46,33 +39,25 @@ def xgb_runner(data, todays_games_uo, frame_ml, games, home_team_odds, away_team
             if under_over == 0:
                 un_confidence = round(ou_predictions_array[count][0][0] * 100, 1)
                 with open('/content/output.txt', 'a') as file:
-                    file.write(
-                    "\n" + Fore.GREEN + home_team + Style.RESET_ALL + Fore.CYAN + f" ({winner_confidence}%)" + Style.RESET_ALL + ' vs ' + Fore.RED + away_team + Style.RESET_ALL + ': ' +
-                    Fore.MAGENTA + 'UNDER ' + Style.RESET_ALL + str(
-                        todays_games_uo[count]) + Style.RESET_ALL + Fore.CYAN + f" ({un_confidence}%)" + Style.RESET_ALL)
+                    file.write("\n" + home_team + f" ({winner_confidence}%)" + ' vs ' + away_team + ': ' +
+                               'UNDER ' + str(todays_games_uo[count]) + f" ({un_confidence}%)")
             else:
                 un_confidence = round(ou_predictions_array[count][0][1] * 100, 1)
                 with open('/content/output.txt', 'a') as file:
-                    file.write(
-                    "\n" + Fore.GREEN + home_team + Style.RESET_ALL + Fore.CYAN + f" ({winner_confidence}%)" + Style.RESET_ALL + ' vs ' + Fore.RED + away_team + Style.RESET_ALL + ': ' +
-                    Fore.BLUE + 'OVER ' + Style.RESET_ALL + str(
-                        todays_games_uo[count]) + Style.RESET_ALL + Fore.CYAN + f" ({un_confidence}%)" + Style.RESET_ALL)
+                    file.write("\n" + home_team + f" ({winner_confidence}%)" + ' vs ' + away_team + ': ' +
+                               'OVER ' + str(todays_games_uo[count]) + f" ({un_confidence}%)")
         else:
             winner_confidence = round(winner_confidence[0][0] * 100, 1)
             if under_over == 0:
                 un_confidence = round(ou_predictions_array[count][0][0] * 100, 1)
                 with open('/content/output.txt', 'a') as file:
-                    file.write(
-                    "\n" + Fore.RED + home_team + Style.RESET_ALL + ' vs ' + Fore.GREEN + away_team + Style.RESET_ALL + Fore.CYAN + f" ({winner_confidence}%)" + Style.RESET_ALL + ': ' +
-                    Fore.MAGENTA + 'UNDER ' + Style.RESET_ALL + str(
-                        todays_games_uo[count]) + Style.RESET_ALL + Fore.CYAN + f" ({un_confidence}%)" + Style.RESET_ALL)
+                    file.write("\n" + home_team + ' vs ' + away_team + f" ({winner_confidence}%)" + ': ' +
+                               'UNDER ' + str(todays_games_uo[count]) + f" ({un_confidence}%)")
             else:
                 un_confidence = round(ou_predictions_array[count][0][1] * 100, 1)
                 with open('/content/output.txt', 'a') as file:
-                    file.write(
-                    "\n" + Fore.RED + home_team + Style.RESET_ALL + ' vs ' + Fore.GREEN + away_team + Style.RESET_ALL + Fore.CYAN + f" ({winner_confidence}%)" + Style.RESET_ALL + ': ' +
-                    Fore.BLUE + 'OVER ' + Style.RESET_ALL + str(
-                        todays_games_uo[count]) + Style.RESET_ALL + Fore.CYAN + f" ({un_confidence}%)" + Style.RESET_ALL)
+                    file.write("\n" + home_team + ' vs ' + away_team + f" ({winner_confidence}%)" + ': ' +
+                               'OVER ' + str(todays_games_uo[count]) + f" ({un_confidence}%)")
         count += 1
 
     if kelly_criterion:
@@ -87,14 +72,11 @@ def xgb_runner(data, todays_games_uo, frame_ml, games, home_team_odds, away_team
         if home_team_odds[count] and away_team_odds[count]:
             ev_home = float(Expected_Value.expected_value(ml_predictions_array[count][0][1], int(home_team_odds[count])))
             ev_away = float(Expected_Value.expected_value(ml_predictions_array[count][0][0], int(away_team_odds[count])))
-        expected_value_colors = {'home_color': Fore.GREEN if ev_home > 0 else Fore.RED,
-                        'away_color': Fore.GREEN if ev_away > 0 else Fore.RED}
+
         bankroll_descriptor = ' Fraction of Bankroll: '
         bankroll_fraction_home = bankroll_descriptor + str(kc.calculate_kelly_criterion(home_team_odds[count], ml_predictions_array[count][0][1])) + '%'
         bankroll_fraction_away = bankroll_descriptor + str(kc.calculate_kelly_criterion(away_team_odds[count], ml_predictions_array[count][0][0])) + '%'
 
-        print(home_team + ' EV: ' + expected_value_colors['home_color'] + str(ev_home) + Style.RESET_ALL + (bankroll_fraction_home if kelly_criterion else ''))
-        print(away_team + ' EV: ' + expected_value_colors['away_color'] + str(ev_away) + Style.RESET_ALL + (bankroll_fraction_away if kelly_criterion else ''))
+        print(home_team + ' EV: ' + str(ev_home) + (bankroll_fraction_home if kelly_criterion else ''))
+        print(away_team + ' EV: ' + str(ev_away) + (bankroll_fraction_away if kelly_criterion else ''))
         count += 1
-
-    deinit()
