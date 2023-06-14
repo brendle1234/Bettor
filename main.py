@@ -98,7 +98,7 @@ def main():
                 odds_str = f"{away_team} ({odds[g][away_team]['money_line_odds']}) @ {home_team} ({odds[g][home_team]['money_line_odds']})"
                 print(odds_str)
                 with open('/content/output.txt', 'a') as file:
-                    file.write(odds_str)
+                    file.write('/n', odds_str)
     else:
         data = get_todays_games_json(todays_games_url)
         games = create_todays_games(data)
