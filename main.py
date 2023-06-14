@@ -93,12 +93,10 @@ def main():
             odds = None
         else:
             with open('/content/output.txt', 'a') as file:
-                tem = f"------------------{args.odds} odds data------------------"
-                file.write('/n' + tem)
+                file.write(f"\n------------------{args.odds} odds data------------------")
                 for g in odds.keys():
                     home_team, away_team = g.split(":")
-                    tem = f"{away_team} ({odds[g][away_team]['money_line_odds']}) @ {home_team} ({odds[g][home_team]['money_line_odds']})"
-                    file.write('/n' + tem)
+                    file.write(f"\n{away_team} ({odds[g][away_team]['money_line_odds']}) @ {home_team} ({odds[g][home_team]['money_line_odds']})")
     else:
         data = get_todays_games_json(todays_games_url)
         games = create_todays_games(data)
