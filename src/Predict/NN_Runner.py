@@ -13,6 +13,8 @@ ou_model = load_model("Models/NN_Models/Trained-Model-OU-1680133008.6887271")
 
 
 def nn_runner(data, todays_games_uo, frame_ml, games, home_team_odds, away_team_odds, kelly_criterion):
+    with open('/content/output.txt', 'a') as file:
+        file.write("\n------------Neural Network Model Predictions-----------")
     ml_predictions_array = []
 
     for row in data:
